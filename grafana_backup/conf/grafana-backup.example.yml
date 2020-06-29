@@ -4,6 +4,7 @@ main:
   debug: True
   verify_ssl: True
   backup_dir: '_OUTPUT_'
+  encrypt_passphrase: ''
 grafana:
   url: 'http://localhost:3000'
   token: 'eyJrIjoiSkQ5NkdvWllHdnVNdlVhWUV3Tm5LSGc4NG53UFdSTjQiLCJuIjoiYWRtaW4iLCJpZCI6MX0='

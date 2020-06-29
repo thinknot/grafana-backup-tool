@@ -19,10 +19,12 @@ def main(config_path):
     debug = config.get('main', {}).get('debug', True)
     verify_ssl = config.get('main', {}).get('verify_ssl', False)
     backup_dir = config.get('main', {}).get('backup_dir', '_OUTPUT_')
+    encrypt_passphrase = config.get('main', {}).get('encrypt_passphrase', '')
 
     GRAFANA_URL = os.getenv('GRAFANA_URL', grafana_url)
     TOKEN = os.getenv('GRAFANA_TOKEN', grafana_token)
     SEARCH_API_LIMIT = os.getenv('SEARCH_API_LIMIT', grafana_search_api_limit)
+    ENCRYPT_PASSPHRASE = os.getenv('ENCRYPT_PASSPHRASE', encrypt_passphrase)
 
     DEBUG = os.getenv('DEBUG', debug)
     if isinstance(DEBUG, str):
@@ -55,5 +57,6 @@ def main(config_path):
     config_dict['HTTP_GET_HEADERS'] = HTTP_GET_HEADERS
     config_dict['HTTP_POST_HEADERS'] = HTTP_POST_HEADERS
     config_dict['TIMESTAMP'] = TIMESTAMP
+    config_dict['ENCRYPT_PASSPHRASE'] = ENCRYPT_PASSPHRASE
 
     return config_dict

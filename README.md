@@ -84,7 +84,7 @@ Replace variables below to use the Docker version of this tool
 
 ### Backup
 
-If you decide to use a volume (-v) then you'll need to create the volume first with 1337 uid/gid ownership first, example:
+**NOTE** If you decide to use a volume (-v) then you'll need to create the volume first with 1337 uid/gid ownership first, example:
 ```
 mkdir /tmp/backup
 sudo chown 1337:1337 /tmp/backup
@@ -95,6 +95,7 @@ docker run --rm --name grafana-backup-tool \
            -e GRAFANA_TOKEN={YOUR_GRAFANA_TOKEN} \
            -e GRAFANA_URL={YOUR_GRAFANA_URL} \
            -e VERIFY_SSL={True/False} \
+           -e ENCRYPT_PASSPHRASE={OPTIONALLY_ENCRYPT_BACKUP_CONTENTS} \
            -v {YOUR_BACKUP_FOLDER_ON_THE_HOST}:/opt/grafana-backup-tool/_OUTPUT_  \
            alpinebased:grafana-backup
 ```
@@ -106,6 +107,7 @@ docker run --rm --name grafana-backup-tool \
            -e GRAFANA_TOKEN="eyJrIjoiNGZqTDEyeXNaY0RsMXNhbkNTSnlKN2M3bE1VeHdqVTEiLCJuIjoiZ3JhZmFuYS1iYWNrdXAiLCJpZCI6MX0=" \
            -e GRAFANA_URL=http://192.168.0.79:3000 \
            -e VERIFY_SSL=False \
+           -e ENCRYPT_PASSPHRASE="secret" \
            -v /tmp/backup/:/opt/grafana-backup-tool/_OUTPUT_ \
            alpinebased:grafana-backup
 ```
@@ -118,6 +120,7 @@ docker run --rm --name grafana-backup-tool \
            -e GRAFANA_TOKEN={YOUR_GRAFANA_TOKEN} \
            -e GRAFANA_URL={YOUR_GRAFANA_URL} \
            -e VERIFY_SSL={True/False} \
+           -e ENCRYPT_PASSPHRASE={OPTIONALLY_DECRYPT_BACKUP_CONTENTS} \
            -e RESTORE="true" \
            -e ARCHIVE_FILE={THE_ARCHIVED_FILE_NAME} \
            -v {YOUR_BACKUP_FOLDER_ON_THE_HOST}:/opt/grafana-backup-tool/_OUTPUT_  \
@@ -131,6 +134,7 @@ docker run --rm --name grafana-backup-tool \
            -e GRAFANA_TOKEN="eyJrIjoiNGZqTDEyeXNaY0RsMXNhbkNTSnlKN2M3bE1VeHdqVTEiLCJuIjoiZ3JhZmFuYS1iYWNrdXAiLCJpZCI6MX0=" \
            -e GRAFANA_URL=http://192.168.0.79:3000 \
            -e VERIFY_SSL=False \
+           -e ENCRYPT_PASSPHRASE="secret" \
            -e RESTORE="true" \
            -e ARCHIVE_FILE="202006280247.tar.gz" \
            -v /tmp/backup/:/opt/grafana-backup-tool/_OUTPUT_ \

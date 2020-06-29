@@ -10,8 +10,8 @@ docstring = """
 {0} {1}
 
 Usage:
-    grafana-backup save [--config=<filename>]
-    grafana-backup restore <archive_file> [--config=<filename>]
+    grafana-backup save [--config=<filename>] [--encrypt-passphrase=<secret>]
+    grafana-backup restore <archive_file> [--config=<filename>] [--encrypt-passphrase=<secret>]
     grafana-backup [--config=<filename>]
     grafana-backup -h | --help
     grafana-backup --version
@@ -20,6 +20,7 @@ Options:
     -h --help                                Show this help message and exit
     --version                                Get version information and exit
     --config=<filename>                      Override default configuration path
+    --encrypt-passphrase=<secret>            Optionally encrypt/decrypt the backup by supplying a passphrase
 """.format(PKG_NAME, PKG_VERSION)
 
 args = docopt(docstring, version='{0} {1}'.format(PKG_NAME, PKG_VERSION))

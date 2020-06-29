@@ -7,7 +7,8 @@ version = PKG_VERSION
 requires = [
     'requests',
     'docopt',
-    'pyyaml'
+    'pyyaml',
+    'pycryptodome==3.9.8'
 ]
 
 setup(
