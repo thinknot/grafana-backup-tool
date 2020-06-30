@@ -2,6 +2,7 @@ from grafana_backup.create_folder import main as create_folder
 from grafana_backup.create_datasource import main as create_datasource
 from grafana_backup.create_dashboard import main as create_dashboard
 from grafana_backup.create_alert_channel import main as create_alert_channel
+from grafana_backup.s3_download import main as s3_download
 from grafana_backup.crypto import decrypt
 from glob import glob
 import tarfile, tempfile, sys
@@ -12,19 +13,33 @@ def main(args, settings):
     arg_encrypt_passphrase = args.get('--encrypt-passphrase', '')
 
     encrypt_passphrase = settings.get('ENCRYPT_PASSPHRASE')
-
-    try:
-        tarfile.is_tarfile(arg_archive_file)
-    except IOError as e:
-        print(str(e))
-        sys.exit(1)
+    aws_s3_bucket_name = settings.get('AWS_S3_BUCKET_NAME')
 
     # Ensure encrypt_passhrase gets set if argument is used...
     if arg_encrypt_passphrase:
         encrypt_passphrase = arg_encrypt_passphrase
 
+    # Use tar data stream if S3 bucket name is specified
+    if aws_s3_bucket_name:
+        s3_data = s3_download(args, settings)
+        try:
+            tar = tarfile.open(fileobj=s3_data, mode='r:gz')    
+        except Exception as e:
+            print(str(e))
+            sys.exit(1)
+    else:
+        try:
+            tarfile.is_tarfile(name=arg_archive_file)
+        except IOError as e:
+            print(str(e))
+            sys.exit(1)
+        try:
+            tar = tarfile.open(name=arg_archive_file, mode='r:gz')
+        except Exception as e:
+            print(str(e))
+            sys.exit(1)
+
     with tempfile.TemporaryDirectory() as tmpdir:
-        tar = tarfile.open(arg_archive_file, 'r')
         tar.extractall(tmpdir)
         tar.close()
         for ext in ['folder', 'datasource', 'dashboard', 'alert_channel']:

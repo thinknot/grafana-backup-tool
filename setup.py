@@ -8,7 +8,8 @@ requires = [
     'requests',
     'docopt',
     'pyyaml',
-    'pycryptodome==3.9.8'
+    'pycryptodome==3.9.8',
+    'boto3'
 ]
 
 setup(

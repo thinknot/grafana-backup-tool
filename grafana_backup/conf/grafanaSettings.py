@@ -20,11 +20,22 @@ def main(config_path):
     verify_ssl = config.get('main', {}).get('verify_ssl', False)
     backup_dir = config.get('main', {}).get('backup_dir', '_OUTPUT_')
     encrypt_passphrase = config.get('main', {}).get('encrypt_passphrase', '')
+    aws_s3_bucket_name = config.get('aws', {}).get('s3_bucket_name', '')
+    aws_s3_bucket_key = config.get('aws', {}).get('s3_bucket_key', '')
+    aws_default_region = config.get('aws', {}).get('default_region', '')
+    aws_access_key_id = config.get('aws', {}).get('access_key_id', '')
+    aws_secret_access_key = config.get('aws', {}).get('secret_access_key', '')
 
     GRAFANA_URL = os.getenv('GRAFANA_URL', grafana_url)
     TOKEN = os.getenv('GRAFANA_TOKEN', grafana_token)
     SEARCH_API_LIMIT = os.getenv('SEARCH_API_LIMIT', grafana_search_api_limit)
     ENCRYPT_PASSPHRASE = os.getenv('ENCRYPT_PASSPHRASE', encrypt_passphrase)
+
+    AWS_S3_BUCKET_NAME = os.getenv('AWS_S3_BUCKET_NAME', aws_s3_bucket_name)
+    AWS_S3_BUCKET_KEY = os.getenv('AWS_S3_BUCKET_KEY', aws_s3_bucket_key)
+    AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION', aws_default_region)
+    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', aws_access_key_id)
+    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', aws_secret_access_key)
 
     DEBUG = os.getenv('DEBUG', debug)
     if isinstance(DEBUG, str):
@@ -58,5 +69,10 @@ def main(config_path):
     config_dict['HTTP_POST_HEADERS'] = HTTP_POST_HEADERS
     config_dict['TIMESTAMP'] = TIMESTAMP
     config_dict['ENCRYPT_PASSPHRASE'] = ENCRYPT_PASSPHRASE
+    config_dict['AWS_S3_BUCKET_NAME'] = AWS_S3_BUCKET_NAME
+    config_dict['AWS_S3_BUCKET_KEY'] = AWS_S3_BUCKET_KEY
+    config_dict['AWS_DEFAULT_REGION'] = AWS_DEFAULT_REGION
+    config_dict['AWS_ACCESS_KEY_ID'] = AWS_ACCESS_KEY_ID
+    config_dict['AWS_SECRET_ACCESS_KEY'] = AWS_SECRET_ACCESS_KEY
 
     return config_dict
