@@ -9,7 +9,8 @@ requires = [
     'docopt',
     'pyyaml',
     'pycryptodome==3.9.8',
-    'boto3'
+    'boto3',
+    'influxdb'
 ]
 
 setup(

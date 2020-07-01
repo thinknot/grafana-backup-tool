@@ -101,6 +101,12 @@ docker run --rm --name grafana-backup-tool \
            -e AWS_DEFAULT_REGION={YOUR_AWS_REGION} \
            -e AWS_ACCESS_KEY_ID={YOUR_AWS_ACCESS_KEY_ID} \
            -e AWS_SECRET_ACCESS_KEY={YOUR_AWS_SECRET_ACCESS_KEY} \
+           -e INFLUXDB_MEASUREMENT={OPTIONALLY_UPLOAD_SUCCESS_TO_INFLUXDB} \
+           -e INFLUXDB_HOST={YOUR_INFLUX_HOST} \
+           -e INFLUXDB_PORT={YOUR_INFLUX_PORT \
+           -e INFLUXDB_USERNAME={YOUR_INFLUX_USERNAME} \
+           -e INFLUXDB_PASSWORD={YOUR_INFLUX_PASSWORD} \
+           -e INFLUXDB_DATABASE={YOUR_INFLUX_DATABASE} \
            -v {YOUR_BACKUP_FOLDER_ON_THE_HOST}:/opt/grafana-backup-tool/_OUTPUT_  \
            alpinebased:grafana-backup
 ```
@@ -118,6 +124,12 @@ docker run --rm --name grafana-backup-tool \
            -e AWS_DEFAULT_REGION="us-east-1" \
            -e AWS_ACCESS_KEY_ID="secret" \
            -e AWS_SECRET_ACCESS_KEY="secret" \
+           -e INFLUXDB_MEASUREMENT="grafana_backup" \
+           -e INFLUXDB_HOST="localhost" \
+           -e INFLUXDB_PORT=8086 \
+           -e INFLUXDB_USERNAME="root" \
+           -e INFLUXDB_PASSWORD="root" \
+           -e INFLUXDB_DATABASE="db" \
            -v /tmp/backup/:/opt/grafana-backup-tool/_OUTPUT_ \
            alpinebased:grafana-backup
 ```
@@ -131,6 +143,11 @@ docker run --rm --name grafana-backup-tool \
            -e GRAFANA_URL={YOUR_GRAFANA_URL} \
            -e VERIFY_SSL={True/False} \
            -e ENCRYPT_PASSPHRASE={OPTIONALLY_DECRYPT_BACKUP_CONTENTS} \
+           -e AWS_S3_BUCKET_NAME={OPTIONALLY_RESTORE_FROM_S3_BUCKET} \
+           -e AWS_S3_BUCKET_KEY={YOUR_S3_BUCKET_KEY} \
+           -e AWS_DEFAULT_REGION={YOUR_AWS_REGION} \
+           -e AWS_ACCESS_KEY_ID={YOUR_AWS_ACCESS_KEY_ID} \
+           -e AWS_SECRET_ACCESS_KEY={YOUR_AWS_SECRET_ACCESS_KEY} \
            -e RESTORE="true" \
            -e ARCHIVE_FILE={THE_ARCHIVED_FILE_NAME} \
            -v {YOUR_BACKUP_FOLDER_ON_THE_HOST}:/opt/grafana-backup-tool/_OUTPUT_  \
@@ -145,6 +162,11 @@ docker run --rm --name grafana-backup-tool \
            -e GRAFANA_URL=http://192.168.0.79:3000 \
            -e VERIFY_SSL=False \
            -e ENCRYPT_PASSPHRASE="secret" \
+           -e AWS_S3_BUCKET_NAME="my-backups-bucket" \
+           -e AWS_S3_BUCKET_KEY="grafana-backup-folder" \
+           -e AWS_DEFAULT_REGION="us-east-1" \
+           -e AWS_ACCESS_KEY_ID="secret" \
+           -e AWS_SECRET_ACCESS_KEY="secret" \
            -e RESTORE="true" \
            -e ARCHIVE_FILE="202006280247.tar.gz" \
            -v /tmp/backup/:/opt/grafana-backup-tool/_OUTPUT_ \

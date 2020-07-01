@@ -26,6 +26,13 @@ def main(config_path):
     aws_access_key_id = config.get('aws', {}).get('access_key_id', '')
     aws_secret_access_key = config.get('aws', {}).get('secret_access_key', '')
 
+    influxdb_measurement = config.get('influxdb', {}).get('measurement', '')
+    influxdb_host = config.get('influxdb', {}).get('host', '')
+    influxdb_port = config.get('influxdb', {}).get('port', 0)
+    influxdb_username = config.get('influxdb', {}).get('username', '')
+    influxdb_password = config.get('influxdb', {}).get('password', '')
+    influxdb_database = config.get('influxdb', {}).get('database', '')
+
     GRAFANA_URL = os.getenv('GRAFANA_URL', grafana_url)
     TOKEN = os.getenv('GRAFANA_TOKEN', grafana_token)
     SEARCH_API_LIMIT = os.getenv('SEARCH_API_LIMIT', grafana_search_api_limit)
@@ -36,6 +43,13 @@ def main(config_path):
     AWS_DEFAULT_REGION = os.getenv('AWS_DEFAULT_REGION', aws_default_region)
     AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID', aws_access_key_id)
     AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY', aws_secret_access_key)
+
+    INFLUXDB_MEASUREMENT = os.getenv('INFLUXDB_MEASUREMENT', influxdb_measurement)
+    INFLUXDB_HOST = os.getenv('INFLUXDB_HOST', influxdb_host)
+    INFLUXDB_PORT = int(os.getenv('INFLUXDB_PORT', influxdb_port))
+    INFLUXDB_USERNAME = os.getenv('INFLUXDB_USERNAME', influxdb_username)
+    INFLUXDB_PASSWORD = os.getenv('INFLUXDB_PASSWORD', influxdb_password)
+    INFLUXDB_DATABASE = os.getenv('INFLUXDB_DATABASE', influxdb_database)
 
     DEBUG = os.getenv('DEBUG', debug)
     if isinstance(DEBUG, str):
@@ -74,5 +88,11 @@ def main(config_path):
     config_dict['AWS_DEFAULT_REGION'] = AWS_DEFAULT_REGION
     config_dict['AWS_ACCESS_KEY_ID'] = AWS_ACCESS_KEY_ID
     config_dict['AWS_SECRET_ACCESS_KEY'] = AWS_SECRET_ACCESS_KEY
+    config_dict['INFLUXDB_MEASUREMENT'] = INFLUXDB_MEASUREMENT
+    config_dict['INFLUXDB_HOST'] = INFLUXDB_HOST
+    config_dict['INFLUXDB_PORT'] = INFLUXDB_PORT
+    config_dict['INFLUXDB_USERNAME'] = INFLUXDB_USERNAME
+    config_dict['INFLUXDB_PASSWORD'] = INFLUXDB_PASSWORD
+    config_dict['INFLUXDB_DATABASE'] = INFLUXDB_DATABASE
 
     return config_dict
