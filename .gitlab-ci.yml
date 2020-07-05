@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - release
+  - analyze
 
 variables:
   DOCKERIMAGE_TAG: '19.03.8'
@@ -26,6 +27,12 @@ image-build:
       --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
       .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+pytest:
+  stage: test
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  allow_failure: false
+  script:
+  - pytest
 
 push-master:
   stage: release
@@ -58,3 +65,20 @@ push-tag:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+flake8:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  stage: analyze
+  before_script:
+    - python --version
+    - pip install -r requirements.txt
+  allow_failure: true
+  script:
+    - flake8 grafana_backup/
+pylint:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  stage: analyze
+  before_script:
+    - python --version
+  allow_failure: true
+  script:
+    - pylint grafana_backup/
