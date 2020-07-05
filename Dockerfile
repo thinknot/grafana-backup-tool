@@ -11,6 +11,7 @@ RUN echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk
 WORKDIR /opt/grafana-backup-tool
 ADD . /opt/grafana-backup-tool
 
+RUN pip3 install --no-cache-dir -r requirements.txt
 RUN pip3 --no-cache-dir install .
 
 RUN chown -R 1337:1337 /opt/grafana-backup-tool
