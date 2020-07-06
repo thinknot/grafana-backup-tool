@@ -7,4 +7,3 @@ else
   echo "Backing up grafana"
   grafana-backup save
 fi
-
