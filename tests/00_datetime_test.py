@@ -34,4 +34,6 @@ def test_datetime_random_failing():
     print('timestamp 3 minutes ago: {}'.format(ts_then))
     print('datetime 3 minutes ago: {}'.format(dt_then))
     print('3 minutes ago floor: {}'.format(then_floor))
+    dt_check = dt_check.replace(microsecond=0)
+    dt_now_utc2 = dt_now_utc2.replace(microsecond=0)
     assert dt_check == dt_now_utc2
