@@ -1,19 +1,27 @@
-FROM alpine:latest
+FROM python:3.8-slim-buster
 
-LABEL maintainer="ysde108@gmail.com"
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-ENV RESTORE false
-ENV ARCHIVE_FILE ""
+ENV DIRHOME /opt/grafana-backup-tool
+WORKDIR $DIRHOME
 
-RUN echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && apk --no-cache add python3 py3-pip py3-cffi py3-cryptography ca-certificates bash
+ENV VIRTUAL_ENV=$DIRHOME/venv
+RUN python3 -m virtualenv $VIRTUAL_ENV
 
-WORKDIR /opt/grafana-backup-tool
-ADD . /opt/grafana-backup-tool
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN pip install --upgrade pip
 
-RUN pip3 install --no-cache-dir -r requirements.txt
-RUN pip3 --no-cache-dir install .
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY setup.py setup.py
+COPY grafana_backup grafana_backup
+
+RUN pip --no-cache-dir install .
+
+COPY docker_entry.sh docker_entry.sh
 
 RUN chown -R 1337:1337 /opt/grafana-backup-tool
 USER 1337
-CMD sh -c 'if [ "$RESTORE" = true ]; then grafana-backup restore _OUTPUT_/$ARCHIVE_FILE; else grafana-backup save; fi'
+ENTRYPOINT ["./docker_entry.sh"]
