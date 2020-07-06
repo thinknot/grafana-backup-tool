@@ -27,6 +27,7 @@ image-build:
       --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
       .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
 pytest:
   stage: test
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
@@ -65,12 +66,12 @@ push-tag:
     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+
 flake8:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   stage: analyze
   before_script:
-    - python --version
-    - pip install -r requirements.txt
+    - python3 --version
   allow_failure: true
   script:
     - flake8 grafana_backup/
@@ -78,7 +79,7 @@ pylint:
   image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
   stage: analyze
   before_script:
-    - python --version
+    - python3 --version
   allow_failure: true
   script:
     - pylint grafana_backup/
