@@ -28,12 +28,12 @@ image-build:
       .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
-pytest:
-  stage: test
-  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-  allow_failure: false
-  script:
-  - pytest
+#pytest:
+#  stage: test
+#  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+#  allow_failure: false
+#  script:
+#  - pytest
 
 push-master:
   stage: release
