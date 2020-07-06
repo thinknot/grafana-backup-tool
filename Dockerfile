@@ -3,6 +3,10 @@ FROM python:3.8-slim-buster
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
 
+RUN pip3 install --upgrade \
+    pip \ 
+    virtualenv
+
 ENV DIRHOME /opt/grafana-backup-tool
 WORKDIR $DIRHOME
 
