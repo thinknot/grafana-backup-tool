@@ -1,13 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-echo "$1"
-restore_or_backup=$1
-restore_or_backup=${restore_or_backup:=backup}
-
-if [ "$restore_or_backup" == "restore" ]; then
-  echo "Resotring grafana"
-  ./restore_grafana.sh "$2"
+if [ "$RESTORE" = true ]; then
+  echo "Restoring grafana"
+  grafana-backup restore _OUTPUT_/$ARCHIVE_FILE
 else
   echo "Backing up grafana"
-  ./backup_grafana.sh
+  grafana-backup save
 fi
+
