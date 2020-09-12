@@ -1,0 +1,49 @@
+[flake8]
+
+################### PROGRAM ################################
+
+# Specify the number of subprocesses that Flake8 will use to run checks in parallel.
+jobs = 1
+
+################### FILE PATTERNS ##########################
+
+# Provide a comma-separated list of glob patterns to exclude from checks.
+exclude =
+    # git folder
+    .git,
+    # python cache
+    __pycache__,
+# Provide a comma-separate list of glob patterns to include for checks.
+filename =
+    *.py
+
+########## OPTIONS ##########
+
+# Set the maximum length that any line (with some exceptions) may be.
+max-line-length = 100
+# Set the maximum allowed McCabe complexity value for a block of code.
+max-complexity = 10
+
+########## RULES ##########
+
+# ERROR CODES
+#
+# E/W  - PEP8 errors/warnings (pycodestyle)
+# F    - linting errors (pyflakes)
+# C    - McCabe complexity error (mccabe)
+#
+# W503 - line break before binary operator
+# E501 - line too long
+
+# Specify a list of codes to ignore.
+ignore = 
+    E501,
+    E115,
+    C901
+
+# Specify the list of error codes you wish Flake8 to report.
+select =
+    E,
+    W,
+    F,
+    C

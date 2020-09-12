@@ -21,10 +21,10 @@ The aim of this tool is to:
 ## Configuration
 There are three ways to setup the configuration:
 1. Use `environment variables` to define the variables for connecting to a Grafana server.
-2. Use `hard-coded settings` in `src/conf/grafanaSettings.py` (this is the default settings file if not specified otherwise).
-3. Use `~/.grafana-backup.yml` to define variables in yaml format.
+2. Use `hard-coded settings` in `conf/grafanaSettings.json` (this is the default settings file if not specified otherwise).
+3. Use `~/.grafana-backup.json` to define variables in json format.
 
-**NOTE** If you use `environment variables`, you need to add the following to your `.bashrc` or execute once before using the tool:
+**NOTE** If you use `environment variables`, you need to add the following to your `.bashrc` or execute once before using the tool (please change variables according to your setup):
 
 (`GRAFANA_HEADERS` is optional, use it if necessary. please see [#45](https://github.com/ysde/grafana-backup-tool/issues/45))
 ```bash

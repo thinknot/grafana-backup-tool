@@ -1,0 +1,85 @@
+stages:
+  - build
+  - test
+  - release
+  - analyze
+
+variables:
+  DOCKERIMAGE_TAG: '19.03.8'
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+
+image-build:
+  stage: build
+  image: docker:$DOCKERIMAGE_TAG
+  before_script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+  services:
+    - docker:$DOCKERIMAGE_TAG-dind
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - >
+      docker build
+      --pull
+      --build-arg VCS_REF=$CI_COMMIT_SHA
+      --build-arg VCS_URL=$CI_PROJECT_URL
+      --cache-from $CI_REGISTRY_IMAGE:latest
+      --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+      .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+#pytest:
+#  stage: test
+#  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+#  allow_failure: false
+#  script:
+#  - pytest
+
+push-master:
+  stage: release
+  only:
+    - master
+  image: docker:$DOCKERIMAGE_TAG
+  services:
+    - docker:$DOCKERIMAGE_TAG-dind
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+push-tag:
+  stage: release
+  only:
+    - tags
+  image: docker:$DOCKERIMAGE_TAG
+  services:
+    - docker:$DOCKERIMAGE_TAG-dind
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+
+flake8:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  stage: analyze
+  before_script:
+    - python3 --version
+  allow_failure: true
+  script:
+    - flake8 grafana_backup/
+pylint:
+  image: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+  stage: analyze
+  before_script:
+    - python3 --version
+  allow_failure: true
+  script:
+    - pylint grafana_backup/

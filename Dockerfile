@@ -1,19 +1,32 @@
-FROM alpine:latest
+FROM python:3.8-slim-buster
 
-LABEL maintainer="ysde108@gmail.com"
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-ENV RESTORE false
-ENV ARCHIVE_FILE ""
+RUN pip3 install --upgrade \
+    pip \ 
+    virtualenv
 
-RUN echo "@edge http://dl-cdn.alpinelinux.org/alpine/edge/community" >> /etc/apk/repositories \
-    && apk --no-cache add python3 py3-pip py3-cffi ca-certificates gcc g++ make libffi-dev openssl-dev
+ENV DIRHOME /opt/grafana-backup-tool
+WORKDIR $DIRHOME
 
-WORKDIR /opt/grafana-backup-tool
-ADD . /opt/grafana-backup-tool
+ENV VIRTUAL_ENV=$DIRHOME/venv
+RUN python3 -m virtualenv $VIRTUAL_ENV
 
-RUN pip3 --no-cache-dir install .
-RUN apk del gcc g++ make libffi-dev openssl-dev
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN pip install --upgrade pip
+
+COPY requirements.txt requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY README.md README.md
+COPY setup.py setup.py
+COPY grafana_backup grafana_backup
+
+RUN pip --no-cache-dir install .
+
+COPY docker_entry.sh docker_entry.sh
 
 RUN chown -R 1337:1337 /opt/grafana-backup-tool
 USER 1337
-CMD sh -c 'if [ "$RESTORE" = true ]; then if [ ! -z "$AWS_S3_BUCKET_NAME" ]; then grafana-backup restore $ARCHIVE_FILE; else grafana-backup restore _OUTPUT_/$ARCHIVE_FILE; fi else grafana-backup save; fi'
+ENTRYPOINT ["./docker_entry.sh"]

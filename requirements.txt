@@ -1,0 +1,6 @@
+requests[security]==2.24
+docopt==0.6.2
+
+pylint==2.5.2
+pytest==5.4.2
+flake8==3.8.2

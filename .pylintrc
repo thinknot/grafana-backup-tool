@@ -1,0 +1,10 @@
+
+[MASTER]
+
+ignore=
+jobs=1
+persistent=no
+
+[MESSAGES CONTROL]
+
+disable=all

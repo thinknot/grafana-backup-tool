@@ -11,14 +11,27 @@ def main(args, settings):
     aws_s3_bucket_name = settings.get('AWS_S3_BUCKET_NAME')
     influxdb_measurement = settings.get('INFLUXDB_MEASUREMENT')
 
-    save_dashboards(args, settings)
-    save_datasources(args, settings)
-    save_folders(args, settings)
-    save_alert_channels(args, settings)
-    archive(args, settings)
+    arg_components = args.get('--components', False)
+    arg_no_archive = args.get('--no-archive', False)
 
     if aws_s3_bucket_name:
         s3_upload(args, settings)
 
     if influxdb_measurement:
         influx(args, settings)
+
+    backup_functions = { 'dashboards': save_dashboards,
+                         'datasources': save_datasources,
+                         'folders': save_folders,
+                         'alert-channels': save_alert_channels }
+    if arg_components:
+        arg_components_list = arg_components.split(',')
+        # Backup only the components that provided via an argument
+        for backup_function in arg_components_list:
+            backup_functions[backup_function](args, settings)
+    else:
+        # Backup every component
+        for backup_function in backup_functions.keys():
+            backup_functions[backup_function](args, settings)
+    if not arg_no_archive:
+        archive(args, settings)
