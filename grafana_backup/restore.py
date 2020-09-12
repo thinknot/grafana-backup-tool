@@ -8,6 +8,7 @@ import tarfile, tempfile
 
 def main(args, settings):
     archive_file = args.get('<archive_file>', None)
+    arg_components = args.get('--components', False)
 
     try:
         tarfile.is_tarfile(archive_file)
@@ -19,17 +20,24 @@ def main(args, settings):
         tar = tarfile.open(archive_file, 'r')
         tar.extractall(tmpdir)
         tar.close()
-        for ext in ['folder', 'datasource', 'dashboard', 'alert_channel']:
-            for file_path in glob('{0}/**/*.{1}'.format(tmpdir, ext), recursive=True): 
-                if ext == 'folder':
-                    print('restoring folder: {0}'.format(file_path))
-                    create_folder(args, settings, file_path)
-                if ext == 'datasource':
-                    print('restoring datasource: {0}'.format(file_path))
-                    create_datasource(args, settings, file_path)
-                if ext == 'dashboard':
-                    print('restoring dashboard: {0}'.format(file_path))
-                    create_dashboard(args, settings, file_path)
-                if ext == 'alert_channel':
-                    print('restoring alert_channel: {0}'.format(file_path))
-                    create_alert_channel(args, settings, file_path)
+
+        restore_functions = { 'folder': create_folder,
+                              'datasource': create_datasource,
+                              'dashboard': create_dashboard,
+                              'alert_channel': create_alert_channel }
+
+        if arg_components:
+            arg_components_list = arg_components.split(',')
+
+            # Restore only the components that provided via an argument
+            # but must also exist in extracted archive
+            for ext in arg_components_list:
+                for file_path in glob('{0}/**/*.{1}'.format(tmpdir, ext[:-1]), recursive=True):
+                    print('restoring {0}: {1}'.format(ext, file_path))
+                    restore_functions[ext[:-1]](args, settings, file_path)
+        else:
+            # Restore every component included in extracted archive
+            for ext in restore_functions.keys():
+                for file_path in glob('{0}/**/*.{1}'.format(tmpdir, ext), recursive=True):
+                    print('restoring {0}: {1}'.format(ext, file_path))
+                    restore_functions[ext](args, settings, file_path)
