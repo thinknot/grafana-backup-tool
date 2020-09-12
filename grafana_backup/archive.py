@@ -1,4 +1,5 @@
 from grafana_backup.crypto import encrypt
+import os
 from glob import glob
 import tarfile, shutil
 
@@ -14,7 +15,7 @@ def main(args, settings):
     backup_dirs = list()
     backup_files = list()
 
-    for folder_name in ['folders', 'datasources', 'dashboards', 'alert_channels']:
+    for folder_name in ['folders', 'datasources', 'dashboards', 'alert_channels', 'organizations', 'users']:
         backup_path = '{0}/{1}/{2}'.format(backup_dir, folder_name, timestamp)
 
         for dir_path in glob(backup_path):
@@ -41,4 +42,4 @@ def main(args, settings):
             tar.add(dir_path)
             shutil.rmtree(dir_path)
     tar.close()
-    print('created archive: {0}'.format(archive_file))
+    print('\ncreated archive at: {0}'.format(archive_file))

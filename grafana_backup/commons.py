@@ -1,9 +1,10 @@
 import sys, json
 
-def left_ver_newer_than_right_ver(current_version, specefic_version):
+
+def left_ver_newer_than_right_ver(current_version, specific_version):
     def convertVersion(ver):
         return int(''.join(ver.split("-")[0].split(".")))
-    return convertVersion(current_version) > convertVersion(specefic_version)
+    return convertVersion(current_version) > convertVersion(specific_version)
 
 
 def print_horizontal_line():
@@ -14,8 +15,8 @@ def print_horizontal_line():
 
 def log_response(resp):
     status_code = resp.status_code
-    print("[DEBUG] status: {0}".format(status_code))
-    print("[DEBUG] body: {0}".format(resp.json()))
+    print("[DEBUG] resp status: {0}".format(status_code))
+    print("[DEBUG] resp body: {0}".format(resp.json()))
     return resp
 
 
@@ -38,3 +39,14 @@ def load_config(path=None):
         sys.exit(2)
 
     return config
+
+
+def save_json(file_name, data, folder_path, extension, pretty_print):
+    file_path = folder_path + '/' + file_name + '.' + extension
+    with open(u"{0}".format(file_path), 'w') as f:
+        if pretty_print:
+            f.write(json.dumps(data, sort_keys=True, indent=4, separators=(',', ': ')))
+        else:
+            f.write(json.dumps(data))
+    # Return file_path for showing in the console message
+    return file_path
